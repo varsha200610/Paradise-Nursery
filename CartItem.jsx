@@ -1,8 +1,9 @@
+
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { removeItem, updateQuantity } from "./CartSlice";
 
-function CartItem() {
+function CartItem({ onContinueShopping }) {
   const dispatch = useDispatch();
 
   const cartItems = useSelector(
@@ -14,60 +15,115 @@ function CartItem() {
     0
   );
 
+  const handleDecrease = (item) => {
+    if (item.quantity <= 1) {
+      dispatch(removeItem(item.id));
+    } else {
+      dispatch(
+        updateQuantity({
+          id: item.id,
+          quantity: item.quantity - 1
+        })
+      );
+    }
+  };
+
+  const handleCheckout = () => {
+    if (cartItems.length > 0) {
+      alert("Thank you for shopping at Paradise Nursery!");
+    }
+  };
+
   return (
-    <div className="cart-container">
-      <h1>Shopping Cart</h1>
+    <div className="shopping-cart-page">
+      <h1 className="cart-title">Shopping Cart</h1>
 
       {cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <div className="empty-cart">
+          <p>Your cart is empty.</p>
+          <button
+            className="continue-shopping-button"
+            onClick={onContinueShopping}
+          >
+            Continue Shopping
+          </button>
+        </div>
       ) : (
         <>
-          {cartItems.map((item) => (
-            <div className="cart-item" key={item.id}>
-              <h2>{item.name}</h2>
-              <p>Price: ${item.price}</p>
+          <div className="cart-items">
+            {cartItems.map((item) => (
+              <div className="cart-item-card" key={item.id}>
+                <img
+                  className="cart-item-image"
+                  src={item.image}
+                  alt={item.name}
+                />
 
-              <button
-                onClick={() =>
-                  dispatch(
-                    updateQuantity({
-                      id: item.id,
-                      quantity: Math.max(1, item.quantity - 1)
-                    })
-                  )
-                }
-              >
-                -
-              </button>
+                <div className="cart-item-details">
+                  <h2 className="cart-item-name">{item.name}</h2>
+                  <p className="cart-item-price">
+                    Price: ${item.price}
+                  </p>
 
-              <span> {item.quantity} </span>
+                  <div className="quantity-controls">
+                    <button
+                      className="decrease-button"
+                      onClick={() => handleDecrease(item)}
+                    >
+                      -
+                    </button>
 
-              <button
-                onClick={() =>
-                  dispatch(
-                    updateQuantity({
-                      id: item.id,
-                      quantity: item.quantity + 1
-                    })
-                  )
-                }
-              >
-                +
-              </button>
+                    <span className="item-quantity">
+                      {item.quantity}
+                    </span>
 
-              <p>
-                Subtotal: ${item.price * item.quantity}
-              </p>
+                    <button
+                      className="increase-button"
+                      onClick={() =>
+                        dispatch(
+                          updateQuantity({
+                            id: item.id,
+                            quantity: item.quantity + 1
+                          })
+                        )
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
 
-              <button
-                onClick={() => dispatch(removeItem(item.id))}
-              >
-                Remove
-              </button>
-            </div>
-          ))}
+                  <p className="item-subtotal">
+                    Subtotal: ${item.price * item.quantity}
+                  </p>
 
-          <h2>Total: ${total}</h2>
+                  <button
+                    className="remove-item-button"
+                    onClick={() => dispatch(removeItem(item.id))}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <h2 className="cart-total">Total: ${total}</h2>
+
+          <div className="cart-actions">
+            <button
+              className="checkout-button"
+              onClick={handleCheckout}
+            >
+              Checkout
+            </button>
+
+            <button
+              className="continue-shopping-button"
+              onClick={onContinueShopping}
+            >
+              Continue Shopping
+            </button>
+          </div>
         </>
       )}
     </div>
