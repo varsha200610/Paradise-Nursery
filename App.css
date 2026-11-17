@@ -1,15 +1,18 @@
-
 body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+  background-image: url("https://images.unsplash.com/photo-1497250681960-ef046c08a56e");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
 }
 
 .about-us {
   text-align: center;
   padding: 40px;
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.85);
   color: #333333;
 }
 
